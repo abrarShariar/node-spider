@@ -13,24 +13,44 @@ class App extends Component {
 
     componentWillMount() {
         HttpService.getAllNews().then((res) => {
-            if(res.status === 200){
+            if (res.status === 200) {
                 this.setState({
                     news: res.data["data"]
                 });
             }
+
+            this.state.news.map((item) => {
+                console.log(item);
+            })
         }).catch((err) => {
             console.log(err);
         })
     }
 
     render() {
+
+        const newsItems = this.state.news.map((item) => {
+           return(
+               <div className="row">
+                   <div className="col-sm-6 col-md-4">
+                       <div className="thumbnail">
+                           <img src={item.img} alt="..."/>
+                               <div className="caption">
+                                   <h3>
+                                       <a href={item.url}>{item.title_text}</a>
+                                   </h3>
+                               </div>
+                       </div>
+                   </div>
+               </div>
+            )
+        })
+
+
         return (
             <div className="App">
-            {this.state.news.map((item)=>{
-                return <li>{item}</li>
-            })}
                 <div>
-                    Hello WOrld
+                    {newsItems}
                 </div>
             </div>
         );
