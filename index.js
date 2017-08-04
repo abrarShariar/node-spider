@@ -4,9 +4,16 @@ const request = require('request');
 const cheerio = require('cheerio');
 const app    = express();
 
+//the url to scrape
 const url = 'https://www.realestate.com.au/news/';
 
-
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
 
 app.get('/',(req,res)=>{
 
@@ -15,9 +22,9 @@ app.get('/',(req,res)=>{
 
         if(!err){
             const $ = cheerio.load(html);
-            //traverse DOM for main Body
             let main = $("#rui-main-content").html()
-            let articles = $('article',main).nextAll()
+
+            let articles = $('article',main)
 
             articles.map((item,index)=>{
                 let data = {}
@@ -41,20 +48,22 @@ app.get('/',(req,res)=>{
                         if(item.type == 'tag' && item.name == 'a' && item.attribs) {
                             if (item.attribs.class == 'article-summary-title-link'){
                                 data['url'] = item.attribs.href;
-                                data['title'] = item.attribs.title;
+                                data['link_title'] = item.attribs.title;
+
+                                item.children.map((el)=>{
+                                    if(el.type == 'text'){
+                                        data["title_text"] = el.data
+                                    }
+                                })
                                 allNewsData.push(data);
                             }
-                            // allNewsData.push(data);
                         }
                     });
-
                 }
             });
-
             res.send({data: allNewsData})
         }
     });
-
 });
 
 

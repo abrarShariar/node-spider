@@ -4,7 +4,8 @@
   "description": "a web spider for https://www.realestate.com.au/news/ using nodejs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "author": "abrarShariar",
   "license": "ISC",
@@ -12,5 +13,8 @@
     "express": "latest",
     "request": "latest",
     "cheerio": "latest"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }
